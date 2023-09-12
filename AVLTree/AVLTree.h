@@ -13,23 +13,17 @@ struct Node {
 	Node(const T& _val) : value{ _val } {}
 	Node(const T& _val, Node* _left, Node* _right) :
 		value{ _val }, left{ _left }, right{ _right } {
-		if (left && left->height > height)
-			height = left->height;
-		if (right && right->height > height)
-			height = right->height;
-		++height;
+		if (left /*&& left->height + 1 > height*/) // commented expression is always true
+			height = left->height + 1;
+		if (right && right->height + 1 > height)
+			height = right->height + 1;
 	}
-	Node(const Node& _node) {
-		value = _node.value;
-		height = _node.height;
+	Node(const Node& _node) :
+		value(_node.value), height{_node.height} {
 		if (_node.left)
 			left = new Node(*_node.left);
-		else
-			left = nullptr;
 		if (_node.right)
 			right = new Node(*_node.right);
-		else
-			right = nullptr;
 	}
 	Node& operator=(const Node* _node) {
 		if (&_node == this)
@@ -161,13 +155,28 @@ class AVLTree {
 
 public:
 	AVLTree(Comp _comp = Comp{}) : comp(_comp) {}
-	AVLTree(const AVLTree& _tr) : root(new NodeType{*_tr.root}), comp(_tr.comp) {}
+	AVLTree(const AVLTree& _tr) : comp(_tr.comp) {
+		if (_tr.root)
+			root = new NodeType{ *_tr.root };
+	}
+	AVLTree& operator=(const AVLTree& _tr) {
+		if (&_tr == this)
+			return *this;
+		delete root;
+		if (_tr.root)
+			root = new NodeType{ *_tr.root };
+		else
+			root = nullptr;
+		comp = _tr.comp;
+		return *this;
+	}
 	template<class Iter>
 	AVLTree(Iter first, Iter last, Comp _comp = Comp{}) : comp(_comp) {
 		for (; first != last; ++first) {
 			insert_value(*first);
 		}
 	}
+
 	void insert_value(const T& value) {
 		if (root == nullptr) {
 			root = new NodeType{ value };
@@ -215,6 +224,7 @@ public:
 		}
 		return ret;
 	}
+	
 	~AVLTree() {
 		delete root;
 	}
