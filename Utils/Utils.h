@@ -23,4 +23,9 @@ struct Less<void> {
 	}
 };
 
+template<class T, class Comp = Less<>>
+T Max(const T& a, const T& b, Comp comp = Comp{}) {
+	return comp(a, b) ? b : a;
+}
+
 #endif // !AiAS_Utils
