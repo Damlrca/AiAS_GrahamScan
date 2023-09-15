@@ -147,11 +147,11 @@ public:
 	template<class Iter>
 	AVLTree(Iter first, Iter last, Comp _comp = Comp{}) : comp(_comp) {
 		for (; first != last; ++first) {
-			insert_value(*first);
+			insert(*first);
 		}
 	}
 
-	void insert_value(const T& value) {
+	void insert(const T& value) {
 		if (root == nullptr) {
 			root = new NodeType{ value };
 			return;
@@ -180,7 +180,79 @@ public:
 		}
 	}
 
-	std::vector<T> tree_data() {
+	bool find(const T& t) {
+		NodeType* r = root;
+		while (r != nullptr) {
+			if (r->value == t)
+				return true;
+			if (comp(t, r->value))
+				r = r->left;
+			else
+				r = r->right;
+		}
+		return false;
+	}
+
+	void remove(const T& t) {
+		std::stack<NodeType*> path;
+		path.push(root);
+		NodeType* found = nullptr;
+		while (true) {
+			if (path.top() == nullptr) {
+				return;
+			}
+			if (path.top()->value == t) {
+				found = path.top();
+				break;
+			}
+			if (comp(t, path.top()->value))
+				path.push(path.top()->left);
+			else
+				path.push(path.top()->right);
+		}
+		if (found->right == nullptr) {
+			NodeType* temp = found->left;
+			path.pop();
+			if (path.empty()) { // found == root
+				root = temp;
+			}
+			else {
+				if (path.top()->left == found)
+					path.top()->left = temp;
+				else // path.top()->right == found
+					path.top()->right = temp;
+			}
+			if (temp == nullptr && !path.empty()) {
+				temp = path.top(); path.pop();
+			}
+			if (temp) {
+				_balance(path, temp);
+			}
+			found->left = nullptr;
+			found->right = nullptr;
+			delete found;
+		}
+		else {
+			NodeType* m = found->right;
+			while (m->left) {
+				path.push(m);
+				m = m->left;
+			}
+			Swap(found->value, m->value);
+			NodeType* temp = m->right;
+			if (path.top()->left == m)
+				path.top()->left = temp;
+			else // path.top()->right == m
+				path.top()->right = temp;
+			temp = path.top(); path.pop();
+			_balance(path, temp);
+			m->left = nullptr;
+			m->right = nullptr;
+			delete m;
+		}
+	}
+
+	std::vector<T> data() {
 		// Iterative in-order tree traversal
 		std::vector<T> ret;
 		NodeType* t = root;
