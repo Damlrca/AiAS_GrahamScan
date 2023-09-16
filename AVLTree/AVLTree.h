@@ -2,7 +2,6 @@
 #define AiAS_AVLTree
 #include "Utils.h"
 #include <vector>
-#include <stack>
 
 template<class T>
 struct Node {
@@ -53,6 +52,7 @@ class AVLTree {
 	using NodeType = Node<T>;
 	NodeType* root = nullptr;
 	Comp comp = Comp{};
+	std::vector<NodeType*> path;
 
 	int _height(NodeType* cur) {
 		return cur ? cur->height : 0;
@@ -101,9 +101,9 @@ class AVLTree {
 		}
 		return cur;
 	}
-	void _balance(std::stack<NodeType*>& path, NodeType* cur) {
+	void _balance(NodeType* cur) { // need path !!!
 		while (!path.empty()) {
-			NodeType* parent = path.top(); path.pop();
+			NodeType* parent = path.back(); path.pop_back();
 			if (parent->right == cur)
 				parent->right = _balance_cur(cur);
 			else
@@ -138,35 +138,36 @@ public:
 	}
 
 	void insert(const T& value) {
+		path.clear();
 		if (root == nullptr) {
 			root = new NodeType{ value };
 			return;
 		}
-		std::stack<NodeType*> path;
-		path.push(root);
+		path.push_back(root);
 		while (true) {
-			if (comp(value, path.top()->value)) {
-				if (path.top()->left) {
-					path.push(path.top()->left);
+			if (comp(value, path.back()->value)) {
+				if (path.back()->left) {
+					path.push_back(path.back()->left);
 				}
 				else { // path.top()->left == nullptr
-					path.top()->left = new NodeType(value);
-					return _balance(path, path.top()->left);
+					path.back()->left = new NodeType(value);
+					return _balance(path.back()->left);
 				}
 			}
 			else {
-				if (path.top()->right) {
-					path.push(path.top()->right);
+				if (path.back()->right) {
+					path.push_back(path.back()->right);
 				}
 				else { // path.top()->right == nullptr
-					path.top()->right = new NodeType(value);
-					return _balance(path, path.top()->right);
+					path.back()->right = new NodeType(value);
+					return _balance(path.back()->right);
 				}
 			}
 		}
 	}
 
 	bool find(const T& t) {
+		path.clear();
 		NodeType* r = root;
 		while (r != nullptr) {
 			if (r->value == t)
@@ -180,39 +181,38 @@ public:
 	}
 
 	void remove(const T& t) {
-		std::stack<NodeType*> path;
-		path.push(root);
+		path.clear();
+		path.push_back(root);
 		NodeType* found = nullptr;
 		while (true) {
-			if (path.top() == nullptr) {
+			if (path.back() == nullptr)
 				return;
-			}
-			if (path.top()->value == t) {
-				found = path.top();
+			if (path.back()->value == t) {
+				found = path.back();
 				break;
 			}
-			if (comp(t, path.top()->value))
-				path.push(path.top()->left);
+			if (comp(t, path.back()->value))
+				path.push_back(path.back()->left);
 			else
-				path.push(path.top()->right);
+				path.push_back(path.back()->right);
 		}
 		if (found->right == nullptr) {
 			NodeType* temp = found->left;
-			path.pop();
+			path.pop_back();
 			if (path.empty()) { // found == root
 				root = temp;
 			}
 			else {
-				if (path.top()->left == found)
-					path.top()->left = temp;
-				else // path.top()->right == found
-					path.top()->right = temp;
+				if (path.back()->left == found)
+					path.back()->left = temp;
+				else // path.back()->right == found
+					path.back()->right = temp;
 			}
 			if (temp == nullptr && !path.empty()) {
-				temp = path.top(); path.pop();
+				temp = path.back(); path.pop_back();
 			}
 			if (temp) {
-				_balance(path, temp);
+				_balance(temp);
 			}
 			found->left = nullptr;
 			found->right = nullptr;
@@ -221,17 +221,17 @@ public:
 		else {
 			NodeType* m = found->right;
 			while (m->left) {
-				path.push(m);
+				path.push_back(m);
 				m = m->left;
 			}
 			Swap(found->value, m->value);
 			NodeType* temp = m->right;
-			if (path.top()->left == m)
-				path.top()->left = temp;
-			else // path.top()->right == m
-				path.top()->right = temp;
-			temp = path.top(); path.pop();
-			_balance(path, temp);
+			if (path.back()->left == m)
+				path.back()->left = temp;
+			else // path.back()->right == m
+				path.back()->right = temp;
+			temp = path.back(); path.pop_back();
+			_balance(temp);
 			m->left = nullptr;
 			m->right = nullptr;
 			delete m;
@@ -242,14 +242,14 @@ public:
 		// Iterative in-order tree traversal
 		std::vector<T> ret;
 		NodeType* t = root;
-		std::stack<NodeType*> path;
+		std::vector<NodeType*> path;
 		while (!path.empty() || t != nullptr) {
 			if (t != nullptr) {
-				path.push(t);
+				path.push_back(t);
 				t = t->left;
 			}
 			else {
-				t = path.top(); path.pop();
+				t = path.back(); path.pop_back();
 				ret.push_back(t->value);
 				t = t->right;
 			}
