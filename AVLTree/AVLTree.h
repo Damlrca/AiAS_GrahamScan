@@ -54,6 +54,12 @@ class AVLTree {
 	NodeType* root = nullptr;
 	Comp comp = Comp{};
 
+	int _height(NodeType* cur) {
+		return cur ? cur->height : 0;
+	}
+	int _get_balance(NodeType* cur) {
+		return _height(cur->right) - _height(cur->left);
+	}
 	NodeType* _small_right_rotation(NodeType* cur) {
 		//     cur           b
 		//     / \          / \
@@ -61,13 +67,10 @@ class AVLTree {
 		//   / \              / \
 		//  L   C            C   R
 		NodeType* b = cur->left;
-		NodeType* R = cur->right;
-		NodeType* L = b->left;
-		NodeType* C = b->right;
+		cur->left = b->right;
 		b->right = cur;
-		cur->left = C;
-		cur->height = Max((C ? C->height : 0), (R ? R->height : 0)) + 1;
-		b->height = Max((L ? L->height : 0), cur->height) + 1;
+		cur->height = Max(_height(cur->left), _height(cur->right)) + 1;
+		b->height = Max(_height(b->left), _height(b->right)) + 1;
 		return b;
 	}
 	NodeType* _small_left_rotation(NodeType* cur) {
@@ -76,42 +79,25 @@ class AVLTree {
 		//    L   b   ->  cur  R
 		//       / \      / \
 		//      C   R    L   C
-		NodeType* L = cur->left;
 		NodeType* b = cur->right;
-		NodeType* C = b->left;
-		NodeType* R = b->right;
+		cur->right = b->left;
 		b->left = cur;
-		cur->right = C;
-		cur->height = Max((L ? L->height : 0), (C ? C->height : 0)) + 1;
-		b->height = Max(cur->height, (R ? R->height : 0)) + 1;
+		cur->height = Max(_height(cur->left), _height(cur->right)) + 1;
+		b->height = Max(_height(b->left), _height(b->right)) + 1;
 		return b;
 	}
-	NodeType* _big_right_rotation(NodeType* cur) {
-		cur->left = _small_left_rotation(cur->left);
-		return _small_right_rotation(cur);
-	}
-	NodeType* _big_left_rotation(NodeType* cur) {
-		cur->right = _small_right_rotation(cur->right);
-		return _small_left_rotation(cur);
-	}
-	int _get_balance(NodeType* cur) {
-		return (cur->right ? cur->right->height : 0) - (cur->left ? cur->left->height : 0);
-	}
 	NodeType* _balance_cur(NodeType* cur) {
+		cur->height = Max(_height(cur->left), _height(cur->right)) + 1;
 		int b = _get_balance(cur);
 		if (b == 2) {
-			int b_r = _get_balance(cur->right);
-			if (b_r > 0)
-				return _small_left_rotation(cur);
-			else
-				return _big_left_rotation(cur);
+			if (_get_balance(cur->right) < 0)
+				cur->right = _small_right_rotation(cur->right);
+			return _small_left_rotation(cur);
 		}
 		else if (b == -2) {
-			int b_l = _get_balance(cur->left);
-			if (b_l < 0)
-				return _small_right_rotation(cur);
-			else
-				return _big_right_rotation(cur);
+			if (_get_balance(cur->left) > 0)
+				cur->left = _small_left_rotation(cur->left);
+			return _small_right_rotation(cur);
 		}
 		return cur;
 	}
