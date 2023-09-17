@@ -1,27 +1,33 @@
 #include <iostream>
 #include "GrahamScan.h"
 #include "Utils_IO.h"
-using namespace std;
 
+#include <fstream>
 #include <chrono>
 #include <random>
+#include <algorithm>
+#include <numeric>
+using namespace std;
 using namespace std::chrono;
 
 int main() {
-	std::vector<int> v(1'000'000);
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dist(1, 1'000'000);
-	for (int i = 0; i < 1'000'000; i++) {
-		v[i] = dist(gen);
-	}
 	using clock = chrono::system_clock;
-	auto start_time = clock::now();
 
-	v = AVLTree<int>(v.begin(), v.end()).data();
-
-	auto end_time = clock::now();
-	cout << "time: " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count() << "ms\n";
-
+	ofstream out("TestRandom.txt");
+	for (int i = 1; i <= 1'000'001; i += 10'000) {
+		vector<int> v(i);
+		for (auto& j : v)
+			j = dist(gen);
+		auto start_time = clock::now();
+		int k = 10;
+		while (k--)
+			AVLTree<int>(v.begin(), v.end()).data();
+		auto end_time = clock::now();
+		out << i << " " << duration_cast<milliseconds>(end_time - start_time).count() / 10 << endl;
+	}
+	cout << "cringe completed" << endl;
 	return 0;
 }
