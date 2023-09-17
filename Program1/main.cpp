@@ -21,12 +21,18 @@ int main() {
 		vector<int> v(i);
 		for (auto& j : v)
 			j = dist(gen);
-		auto start_time = clock::now();
+		long long time = 0;
 		int k = 10;
-		while (k--)
+		while (k--) {
+			for (auto& j : v)
+				j = dist(gen);
+			auto start_time = clock::now();
 			AVLTree<int>(v.begin(), v.end()).data();
-		auto end_time = clock::now();
-		out << i << " " << duration_cast<milliseconds>(end_time - start_time).count() / 10 << endl;
+			auto end_time = clock::now();
+			time += duration_cast<milliseconds>(end_time - start_time).count();
+		}
+		out << i << " " << time / 10 << endl;
+		cout << i << "\n";
 	}
 	cout << "cringe completed" << endl;
 	return 0;
