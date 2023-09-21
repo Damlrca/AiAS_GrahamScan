@@ -60,6 +60,11 @@ class AVLTree {
 	int _get_balance(NodeType* cur) {
 		return _height(cur->right) - _height(cur->left);
 	}
+	void _fix_height(NodeType* cur) {
+		int h_left = _height(cur->left);
+		int h_right = _height(cur->right);
+		cur->height = 1 + (h_right > h_left ? h_right : h_left);
+	}
 	NodeType* _small_right_rotation(NodeType* cur) {
 		//     cur           b
 		//     / \          / \
@@ -69,8 +74,8 @@ class AVLTree {
 		NodeType* b = cur->left;
 		cur->left = b->right;
 		b->right = cur;
-		cur->height = Max(_height(cur->left), _height(cur->right)) + 1;
-		b->height = Max(_height(b->left), _height(b->right)) + 1;
+		_fix_height(cur);
+		_fix_height(b);
 		return b;
 	}
 	NodeType* _small_left_rotation(NodeType* cur) {
@@ -82,12 +87,12 @@ class AVLTree {
 		NodeType* b = cur->right;
 		cur->right = b->left;
 		b->left = cur;
-		cur->height = Max(_height(cur->left), _height(cur->right)) + 1;
-		b->height = Max(_height(b->left), _height(b->right)) + 1;
+		_fix_height(cur);
+		_fix_height(b);
 		return b;
 	}
 	NodeType* _balance_cur(NodeType* cur) {
-		cur->height = Max(_height(cur->left), _height(cur->right)) + 1;
+		_fix_height(cur);
 		int b = _get_balance(cur);
 		if (b == 2) {
 			if (_get_balance(cur->right) < 0)
@@ -112,7 +117,22 @@ class AVLTree {
 		}
 		root = _balance_cur(cur);
 	}
-
+	void _inserter_recursive(NodeType* cur, const T& value) {
+		if (comp(value, cur->value)) {
+			if (cur->left)
+				_inserter_recursive(cur->left, value);
+			else
+				cur->left = new NodeType(value);
+			cur->left = _balance_cur(cur->left);
+		}
+		else {
+			if (cur->right)
+				_inserter_recursive(cur->right, value);
+			else
+				cur->right = new NodeType(value);
+			cur->right = _balance_cur(cur->right);
+		}
+	}
 public:
 	AVLTree(Comp _comp = Comp{}) : comp(_comp) {}
 	AVLTree(const AVLTree& _tr) : comp(_tr.comp) {
@@ -166,8 +186,16 @@ public:
 		}
 	}
 
+	void insert_recursive(const T& value) {
+		if (root == nullptr) {
+			root = new NodeType{ value };
+			return;
+		}
+		_inserter_recursive(root, value);
+		root = _balance_cur(root);
+	}
+
 	bool find(const T& t) {
-		path.clear();
 		NodeType* r = root;
 		while (r != nullptr) {
 			if (r->value == t)
