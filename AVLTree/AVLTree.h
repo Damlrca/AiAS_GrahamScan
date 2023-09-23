@@ -2,6 +2,7 @@
 #define AiAS_AVLTree
 #include "Utils.h"
 #include <vector>
+#include <type_traits>
 
 template<class T>
 struct Node {
@@ -289,5 +290,27 @@ public:
 		delete root;
 	}
 };
+
+template<class Iter, class Comp = Less<>>
+void AVLTreeSort(Iter first, Iter last, Comp comp = Comp{}) {
+	AVLTree<std::remove_reference<decltype(*first)>::type> tree(comp);
+	for (Iter i = first; i != last; ++i)
+		tree.insert(*i);
+	auto v = tree.data();
+	auto temp = v.begin();
+	for (Iter i = first; i != last; ++i, ++temp)
+		*i = *temp;
+}
+
+template<class Iter, class Comp = Less<>>
+void AVLTreeSort_recursive(Iter first, Iter last, Comp comp = Comp{}) {
+	AVLTree<std::remove_reference<decltype(*first)>::type> tree(comp);
+	for (Iter i = first; i != last; ++i)
+		tree.insert_recursive(*i);
+	auto v = tree.data();
+	auto temp = v.begin();
+	for (Iter i = first; i != last; ++i, ++temp)
+		*i = *temp;
+}
 
 #endif // !AiAS_AVLTree

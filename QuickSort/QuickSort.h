@@ -4,7 +4,9 @@
 
 template<class Iter, class Comp = Less<>>
 Iter Partition(Iter first, Iter last, Comp comp = Comp{}) {
+	Iter mid = first + (last - first) / 2; // pivot is middle element
 	--last;
+	Swap(*mid, *last); // pivot is middle element
 	auto x = *last;
 	Iter q = first;
 	for (Iter j = first; j != last; ++j) {
