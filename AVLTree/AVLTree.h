@@ -293,7 +293,7 @@ public:
 
 template<class Iter, class Comp = Less<>>
 void AVLTreeSort(Iter first, Iter last, Comp comp = Comp{}) {
-	AVLTree<std::remove_reference<decltype(*first)>::type> tree(comp);
+	AVLTree<std::remove_reference<decltype(*first)>::type, Comp> tree(comp);
 	for (Iter i = first; i != last; ++i)
 		tree.insert(*i);
 	auto v = tree.data();
@@ -304,7 +304,7 @@ void AVLTreeSort(Iter first, Iter last, Comp comp = Comp{}) {
 
 template<class Iter, class Comp = Less<>>
 void AVLTreeSort_recursive(Iter first, Iter last, Comp comp = Comp{}) {
-	AVLTree<std::remove_reference<decltype(*first)>::type> tree(comp);
+	AVLTree<std::remove_reference<decltype(*first)>::type, Comp> tree(comp);
 	for (Iter i = first; i != last; ++i)
 		tree.insert_recursive(*i);
 	auto v = tree.data();
