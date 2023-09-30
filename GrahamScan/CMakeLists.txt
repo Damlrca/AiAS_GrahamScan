@@ -5,3 +5,6 @@ target_link_libraries(GrahamScan PUBLIC AVLTree)
 
 target_include_directories(GrahamScan PUBLIC ../QuickSort)
 target_link_libraries(GrahamScan PUBLIC QuickSort)
+
+target_include_directories(GrahamScan PUBLIC ../Utils)
+target_link_libraries(GrahamScan PUBLIC Utils)

@@ -23,4 +23,13 @@ struct Less<void> {
 	}
 };
 
+struct Point {
+	double x;
+	double y;
+};
+bool operator==(const Point& a, const Point& b);
+bool operator!=(const Point& a, const Point& b);
+Point operator-(const Point& a, const Point& b);
+Point operator+(const Point& a, const Point& b);
+
 #endif // !AiAS_Utils
