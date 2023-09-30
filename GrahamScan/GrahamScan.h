@@ -6,16 +6,14 @@ struct Point {
 	double x;
 	double y;
 };
-
-inline bool operator==(const Point& a, const Point& b) {
-	return a.x == b.x && a.y == b.y;
-}
-
-inline bool operator!=(const Point& a, const Point& b) {
-	return !(a == b);
-}
+bool operator==(const Point& a, const Point& b);
+bool operator!=(const Point& a, const Point& b);
+Point operator-(const Point& a, const Point& b);
+Point operator+(const Point& a, const Point& b);
 
 std::vector<Point> GrahamScan_AVLTreeSort(const std::vector<Point>& a);
+
+std::vector<Point> GrahamScan_AVLTreeSort_recursive(const std::vector<Point>& a);
 
 std::vector<Point> GrahamScan_QuickSort(const std::vector<Point>& a);
 
