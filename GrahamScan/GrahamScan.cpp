@@ -3,6 +3,7 @@
 #include "QuickSort.h"
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 
 bool operator==(const Point& a, const Point& b) {
 	return a.x == b.x && a.y == b.y;
@@ -41,7 +42,7 @@ struct PolarAngleComp {
 template<typename S>
 std::vector<Point> _GrahamScan(const std::vector<Point>& a, S* sort) {
 	if (a.empty())
-		throw std::exception{ "empty vector of Points" };
+		throw std::invalid_argument{ "empty vector of Points" };
 
 	// basePoint
 	Point basePoint = a.front();
