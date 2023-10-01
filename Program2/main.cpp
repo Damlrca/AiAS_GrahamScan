@@ -76,8 +76,18 @@ void test_GrahamScan(std::string filename, ExperimentType et, GenTestType gtt, G
 			}
 			time += duration_cast<milliseconds>(end_time - start_time).count();
 		}
-		cout << filename << " " << n << " " << time / 10 << endl;
-		results.push_back({ n, time / 10 });
+		switch (et) {
+		case ExperimentType::E1:
+			cout << filename << " " << n << " " << time / 10 << endl;
+			results.push_back({ n, time / 10 });
+			break;
+		case ExperimentType::E2:
+			cout << filename << " " << q << " " << time / 10 << endl;
+			results.push_back({ q, time / 10 });
+			break;
+		default:
+			break;
+		}
 	}
 	saveTestsResults(filename, results);
 }
