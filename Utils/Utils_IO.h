@@ -21,6 +21,6 @@ void saveFile(std::string filename, std::vector<Point> result, int time_ms);
 // Tests result file format:
 // each line - two integers: n t(n), where t(n) - time in milliseconds
 
-void saveTestsResults(std::string filename, std::vector<std::pair<long long, long long>> results);
+void saveTestsResults(std::string filename, std::vector<std::pair<int, int>> results);
 
 #endif // !AiAS_Utils_IO

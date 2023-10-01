@@ -22,7 +22,7 @@ void saveFile(std::string filename, std::vector<Point> result, int time_ms) {
 	out << time_ms << std::endl;
 }
 
-void saveTestsResults(std::string filename, std::vector<std::pair<long long, long long>> results) {
+void saveTestsResults(std::string filename, std::vector<std::pair<int, int>> results) {
 	std::ofstream out(filename);
 	for (const auto& t : results)
 		out << t.first << " " << t.second << std::endl;
