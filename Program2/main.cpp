@@ -52,7 +52,6 @@ void test_GrahamScan(std::string filename, ExperimentType et, GenTestType gtt, G
 			default:
 				break;
 			}
-			vector<Point> v = GrahamScan_AVLTreeSort(test);
 			// GrahamScan
 			myclock::time_point start_time, end_time;
 			vector<Point> v;
