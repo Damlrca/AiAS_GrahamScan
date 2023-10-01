@@ -2,6 +2,7 @@
 #define AiAS_Utils_IO
 #include <vector>
 #include <string>
+#include <utility>
 #include "Utils.h"
 
 // Input file format:
@@ -15,6 +16,11 @@ std::vector<Point> readFile(std::string filename);
 // next 'size' lines - doubles 'x' and 'y' - coordinates of Points
 // next line - integer 'time' in milliseconds
 
-void saveResult(std::string filename, std::vector<Point> result, int time_ms);
+void saveFile(std::string filename, std::vector<Point> result, int time_ms);
+
+// Tests result file format:
+// each line - two integers: n t(n), where t(n) - time in milliseconds
+
+void saveTestsResults(std::string filename, std::vector<std::pair<long long, long long>> results);
 
 #endif // !AiAS_Utils_IO

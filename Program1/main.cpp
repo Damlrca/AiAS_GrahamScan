@@ -18,6 +18,6 @@ int main() {
 	// v = GrahamScan_QuickSort(v);
 	end_time = myclock::now();
 	int time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-	saveResult("Output.txt", v, time_ms);
+	saveFile("Output.txt", v, time_ms);
 	return 0;
 }
