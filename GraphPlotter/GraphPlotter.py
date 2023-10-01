@@ -31,9 +31,9 @@ def setConfig(fig, ax, nameGraph, nameX, nameY):
 
 if __name__ == "__main__":
     ### AVLTree Iteratrive
-    files = ["TS_AVLTree_ll_random.txt", "TS_AVLTree_ll_sorted.txt", "TS_AVLTree_ll_reversed.txt"]
-    nameLines = ["Random", "Sorted", "SortedReversed"]
-    nameGraph = "Sort by AVLTree, vector<long long>, iterative"
+    # files = ["TS_AVLTree_ll_random.txt", "TS_AVLTree_ll_sorted.txt", "TS_AVLTree_ll_reversed.txt"]
+    # nameLines = ["Random", "Sorted", "SortedReversed"]
+    # nameGraph = "Sort by AVLTree, vector<long long>, iterative"
 
     ### AVLTree Recursive
     # files = ["TS_AVLTreeRecursive_ll_random.txt", "TS_AVLTreeRecursive_ll_sorted.txt", "TS_AVLTreeRecursive_ll_reversed.txt"]
@@ -51,6 +51,24 @@ if __name__ == "__main__":
     # nameLines = ["iterative_Random", "iterative_Sorted", "iterative_SortedReversed",
     #              "recursive_Random", "recursive_Sorted", "recursive_SortedReversed"]
     # nameGraph = "Sort by AVLTree, vector<long long>"
+
+    ### Graham Scan E1
+    files = ["GS_E1_A_AVLTree.txt", "GS_E1_B_AVLTree.txt",
+             "GS_E1_A_AVLTreeRecursive.txt", "GS_E1_B_AVLTreeRecursive.txt",
+             "GS_E1_A_QuickSort.txt", "GS_E1_B_QuickSort.txt"]
+    nameLines = ["E1_A_AVLTree", "E1_B_AVLTree",
+                 "E1_A_AVLTreeRecursive", "E1_B_AVLTreeRecursive",
+                 "E1_A_QuickSort", "E1_B_QuickSort"]
+    nameGraph = "Graham Scan E1"
+
+    ### Graham Scan E2
+    # files = ["GS_E2_A_AVLTree.txt", "GS_E2_B_AVLTree.txt",
+    #          "GS_E2_A_AVLTreeRecursive.txt", "GS_E2_B_AVLTreeRecursive.txt",
+    #          "GS_E2_A_QuickSort.txt", "GS_E2_B_QuickSort.txt"]
+    # nameLines = ["E2_A_AVLTree", "E2_B_AVLTree",
+    #              "E2_A_AVLTreeRecursive", "E2_B_AVLTreeRecursive",
+    #              "E2_A_QuickSort", "E2_B_QuickSort"]
+    # nameGraph = "Graham Scan E2"
 
     dataArrays = readDataFiles(files)
     nameX = "Size of array"
