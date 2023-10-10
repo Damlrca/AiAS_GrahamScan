@@ -30,60 +30,34 @@ def setConfig(fig, ax, nameGraph, nameX, nameY):
 
 
 if __name__ == "__main__":
-    ### AVLTree Iteratrive
-    files = ["TS_AVLTree_ll_random.txt", "TS_AVLTree_ll_sorted.txt", "TS_AVLTree_ll_reversed.txt"]
-    nameLines = ["Random", "Sorted", "SortedReversed"]
-    nameGraph = "Sort by AVLTree, vector<long long>, iterative"
+    ### Experiment 1
+    files = ["GS_E1_A_AVLTreeRecursive.txt", "GS_E1_B_AVLTreeRecursive.txt",
+             "GS_E1_A_QuickSort.txt", "GS_E1_B_QuickSort.txt"]
+    nameLines = ["AVLTree $T_A(n)$", "AVLTree $T_B(n)$",
+                 "QuickSort $T_A(n)$", "QuickSort $T_B(n)$"]
+    nameGraph = "Experiment 1"
+    nameX = "n = size of array A"
+    nameY = "Time(ms)"
 
-    ### AVLTree Recursive
-    # files = ["TS_AVLTreeRecursive_ll_random.txt", "TS_AVLTreeRecursive_ll_sorted.txt", "TS_AVLTreeRecursive_ll_reversed.txt"]
-    # nameLines = ["Random", "Sorted", "SortedReversed"]
-    # nameGraph = "Sort by AVLTree, vector<long long>, recursive"
-
-    ### QuickSort
-    # files = ["TS_QuickSort_ll_random.txt", "TS_QuickSort_ll_sorted.txt", "TS_QuickSort_ll_reversed.txt"]
-    # nameLines = ["Random", "Sorted", "SortedReversed"]
-    # nameGraph = "QuickSort, vector<long long>"
-
-    ### AVLTree Compare Iteratrive and Recursive
-    # files = ["TS_AVLTree_ll_random.txt", "TS_AVLTree_ll_sorted.txt", "TS_AVLTree_ll_reversed.txt",
-    #          "TS_AVLTreeRecursive_ll_random.txt", "TS_AVLTreeRecursive_ll_sorted.txt", "TS_AVLTreeRecursive_ll_reversed.txt"]
-    # nameLines = ["iterative_Random", "iterative_Sorted", "iterative_SortedReversed",
-    #              "recursive_Random", "recursive_Sorted", "recursive_SortedReversed"]
-    # nameGraph = "Sort by AVLTree, vector<long long>"
-
-    ### Graham Scan E1
-    # files = ["GS_E1_A_AVLTree.txt", "GS_E1_B_AVLTree.txt",
-    #          "GS_E1_A_AVLTreeRecursive.txt", "GS_E1_B_AVLTreeRecursive.txt",
-    #          "GS_E1_A_QuickSort.txt", "GS_E1_B_QuickSort.txt"]
-    # nameLines = ["E1_A_AVLTree", "E1_B_AVLTree",
-    #              "E1_A_AVLTreeRecursive", "E1_B_AVLTreeRecursive",
-    #              "E1_A_QuickSort", "E1_B_QuickSort"]
-    # nameGraph = "Graham Scan E1"
-
-    ### Graham Scan E2
-    # files = ["GS_E2_A_AVLTree.txt", "GS_E2_B_AVLTree.txt",
-    #          "GS_E2_A_AVLTreeRecursive.txt", "GS_E2_B_AVLTreeRecursive.txt",
+    ### Experiment 2
+    # files = ["GS_E2_A_AVLTreeRecursive.txt", "GS_E2_B_AVLTreeRecursive.txt",
     #          "GS_E2_A_QuickSort.txt", "GS_E2_B_QuickSort.txt"]
-    # nameLines = ["E2_A_AVLTree", "E2_B_AVLTree",
-    #              "E2_A_AVLTreeRecursive", "E2_B_AVLTreeRecursive",
-    #              "E2_A_QuickSort", "E2_B_QuickSort"]
-    # nameGraph = "Graham Scan E2"
+    # nameLines = ["AVLTree $T_A(q)$", "AVLTree $T_B(q)$",
+    #              "QuickSort $T_A(q)$", "QuickSort $T_B(q)$"]
+    # nameGraph = "Experiment 2"
+    # nameX = "q = side of the square"
+    # nameY = "Time (ms)"
 
     dataArrays = readDataFiles(files)
-    nameX = "Size of array"
-    # for Graham Scan E2:
-    # nameX = "Width of rectangle"
-    nameY = "Time (ms)"
 
-    fig = plt.figure(figsize=(7 * 1.5, 4 * 1.5))
+    fig = plt.figure(figsize=(7.5, 4))
     ax = fig.add_subplot()
     setConfig(fig, ax, nameGraph, nameX, nameY)
 
     for index, data in enumerate(dataArrays):
-        plt.plot(data[0], data[1], label=nameLines[index])
-        # for AVLTree Compare:
-        # plt.plot(data[0], data[1], label=nameLines[index], color=('darkblue', 'darkorange')[index >= 3])
+        # plt.plot(data[0], data[1], label=nameLines[index])
+        plt.plot(data[0], data[1], label=nameLines[index],
+                 color=['purple', 'orangered', 'mediumblue', 'limegreen'][index])
 
     plt.legend()
     plt.grid()
