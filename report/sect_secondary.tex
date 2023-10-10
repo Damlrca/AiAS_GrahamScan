@@ -1,0 +1,143 @@
+\section{Вспомогательные алгоритмы и структуры данных}
+Одним из этапов алгоритма Грэхема является сортировка. От алгоритма сортировки не зависит остальная часть алгоритма Грэхема, поэтому можно рассмотреть сортировки обособленно от всего алгоритма. Однако от выбора сортировки зависит итоговая сложность алгоритма.
+
+В данной лабораторной работе предлагается воспользоваться быстрой сортировкой и сортировкой на основе АВЛ-дерева.
+
+\subsection{Быстрая сортировка}
+
+Быстрая сортировка\footnotemark{} является одним из наиболее известных алгоритмов сортировки. В основе алгоритма лежит принцип \textquotedblleft{}разделяй и властвуй\textquotedblright{}.
+
+\footnotetext{Описание быстрой сортировки и оценка сложности: \cite{cormen}, Глава 7. Быстрая сортировка}
+
+Описание процесса сортировки подмассива $A[p \dots r]$:\\
+\textbf{Разделение.} Массив $A[p \dots r]$ разбивается на два подмассива $A[p \dots q-1]$ и $A[q+1 \dots r]$, такие, что каждый элемент $A[p \dots q-1]$ меньше или равен $A[q]$, а каждый элемент $A[q+1 \dots r]$ больше или равен $A[q]$. Индекс $q$ вычисляется в ходе процедуры разбиения.\\
+\textbf{Властвование.} Подмассивы $A[p \dots q-1]$ и $A[q+1 \dots r]$ сортируются с помощью рекурсивного вызова процедуры быстрой сортировки.\\
+\textbf{Комбинирование.} Поскольку подмассивы сортируются на месте, для их объединения не требуются никакие действия: весь массив $A[p \dots r]$ оказывается отсортированным.\\
+
+\noindent Псевдокод процедуры быстрой сортировки:
+\begin{algorithmic}[1]
+	\Procedure{QuickSort}{$A,p,r$}
+		\If{$p < r$}
+			\State $q =$ \textsc{Partition}$(A,p,r)$
+			\State \textsc{QuickSort}$(A,p,q-1)$
+			\State \textsc{QuickSort}$(A,q+1,r)$
+		\EndIf
+	\EndProcedure
+\end{algorithmic}
+
+Для сортировки всего массива $A$ начальный вызов процедуры должен иметь вид
+\textsc{QuickSort}$(A,1,A.length)$.
+
+\newpage
+
+Ключевой частью данного алгоритма сортировки является процедура разбиения (\textsc{Partition}), изменяющая порядок элементов подмассива $A[p \dots r]$ и возвращающая индекс $q$, необходимый на этапе разделения массива на подмассивы.\\
+
+\noindent Псевдокод процедуры \textsc{Partition}:
+\begin{algorithmic}[1]
+	\Procedure{Partition}{$A,p,r$}
+		\State $x=A[r]$
+		\State $i=p-1$
+		\For{$j=p$ \textbf{to} $r-1$}
+			\If{$A[j] \le x$}
+				\State $i = i + 1$
+				\State \textsc{Swap}$(A[i], A[j])$
+			\EndIf
+		\EndFor
+		\State \textsc{Swap}$(A[i + 1], A[r])$
+		\State \textbf{return} $i + 1$
+	\EndProcedure
+\end{algorithmic}
+
+В наихудшем случае время работы алгоритма быстрой сортировки для сортировки массива из $n$ элементов равно $O(n^2)$, однако математическое ожидание времени работы на случайных входных данных равно $O(n\lg n)$, что позволяет использовать данный алгоритм в прикладных задачах.
+
+\newpage
+
+\subsection{АВЛ-дерево}
+АВЛ-деревом называется двоичное дерево поиска, каждая вершина которого обладает свойством сбалансированности: высоты правого и левого поддеревьев вершины различаются не более чем на 1. Это означает, в частности, что высота АВЛ-дерева -- $O(\lg n)$\footnotemark{}.\\
+
+\footnotetext{Оценка высоты АВЛ-дерева \url{https://en.wikipedia.org/wiki/AVL_tree\#Properties}}
+
+\noindent Алгоритм вставки нового элемента в АВЛ-дерево:
+\begin{enumerate}
+\item{Вставка элемента как в обычное дерево поиска}
+\item{Для каждого элемента от вставленного до корня необходимо:
+	\begin{itemize}
+		\item[--]{восстановить высоту}
+		\item[--]{в случае нарушения свойства сбалансированности необходимо осуществить балансировку (\textsc{Balance})}
+	\end{itemize}}
+\end{enumerate}
+	
+\noindent Псевдокод процедуры балансировки:
+\begin{algorithmic}[1]
+	\Procedure{Balance}{$currentNode$}
+		\State $b =$ \textsc{GetNodeBalance}$(currentNode)$
+		\If{$b=2$}
+			\If{\textsc{GetNodeBalance}$(currentNode.right) < 0$}
+				\State \textsc{RightRotation}$(currentNode.right)$
+			\EndIf
+			\State \textsc{LeftRotation}$(currentNode)$
+		\EndIf
+		\If{$b=-2$}
+			\If{\textsc{GetNodeBalance}$(currentNode.left) > 0$}
+				\State \textsc{LeftRotation}$(currentNode.left)$
+			\EndIf
+			\State \textsc{RightRotation}$(currentNode)$
+		\EndIf
+	\EndProcedure
+\end{algorithmic}
+
+Далее следуют вспомогательные функции, необходимые для функции балансировки.
+
+\noindent Псевдокод процедуры восстановления высоты:
+\begin{algorithmic}[1]
+	\Procedure{FixHeight}{$currentNode$}
+	\State $a = currentNode.left.height$
+	\State $b = currentNode.right.height$
+	\State $currentNode.height = 1+$\textsc{Max}$(a, b)$
+	\EndProcedure
+\end{algorithmic}
+
+\noindent Псевдокод процедуры получения баланса вершины:
+\begin{algorithmic}[1]
+	\Procedure{GetNodeBalance}{$currentNode$}
+		\State \textbf{return} $currentNode.right.height - currentNode.left.height$
+	\EndProcedure
+\end{algorithmic}
+
+\newpage
+
+\noindent Псевдокод процедуры левого поворота:
+\begin{algorithmic}[1]
+	\Procedure{LeftRotation}{$currentNode$}
+		\State $b = currentNode.right$
+		\State $currentNode.right = b.left$
+		\State $b.left = currentNode$
+		\State \textsc{FixHeight}$(currentNode)$
+		\State \textsc{FixHeight}$(b)$
+	\EndProcedure
+\end{algorithmic}
+
+\noindent Псевдокод процедуры правого поворота:
+\begin{algorithmic}[1]
+	\Procedure{RightRotation}{$currentNode$}
+	\State $b = currentNode.left$
+	\State $currentNode.left = b.right$
+	\State $b.right = currentNode$
+	\State \textsc{FixHeight}$(currentNode)$
+	\State \textsc{FixHeight}$(b)$
+	\EndProcedure
+\end{algorithmic}
+
+Так как функция балансировки требует $O(1)$ операций и в процессе добавления вершины рассматриваем не более $O(\lg n)$ вершин, то суммарное кол-во операций при вставке элемента в АВЛ-дерево, состоящее из $n$ вершин, составляет $O(\lg n)$.
+
+Сортировка массива $A$ с помощью АВЛ-дерева осуществляется следующим образом:
+\begin{enumerate}
+	\item{Вставить элементы массива в АВЛ-дерево}
+	\item{Осуществить центрированный обход дерева\footnotemark, получив данные из дерева в отсортированном порядке}
+\end{enumerate}
+
+\footnotetext{Описание алгоритма центрированного обхода и анализ его сложности: \cite{cormen}, Глава 12. Бинарные деревья поиска. \textsc{Inorder-Tree-Walk}}
+
+Время вставки $n$ элементов в АВЛ-дерево составляет $O(n\lg n)$, время обхода дерева составляет $O(n)$, соотвественно время работы алгоритма сортировки, основанного на АВЛ-дереве -- $O(n\lg n)$.
+
+\newpage

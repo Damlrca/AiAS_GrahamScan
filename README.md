@@ -46,4 +46,6 @@
 - **/TestingSorts**
 	- TestingSorts - тестировние сортировок
 - **/GraphPlotter**
-	- GraphPlotter - программа на python для построения графиков
+	- GraphPlotter - программа на Python для построения графиков
+- **/report**
+	- Отчёт по лабораторной работе в TeX формате
