@@ -44,6 +44,15 @@ std::vector<Point> _GrahamScan(const std::vector<Point>& a, S* sort) {
 			temp.push_back(p);
 	sort(temp.begin(), temp.end(), PolarAngleComp{ basePoint });
 
+	std::vector<Point> ans{ basePoint };
+
+	// temp.size() == 0 or temp.size() == 1
+	if (temp.size() <= 1) {
+		for (auto& p : temp)
+			ans.push_back(p);
+		return ans;
+	}
+	
 	// If several points are of the same angle delete all but the furthest point
 	int temp_last_id = 0;
 	for (int i = 1; i < temp.size(); i++) {
@@ -53,12 +62,6 @@ std::vector<Point> _GrahamScan(const std::vector<Point>& a, S* sort) {
 	}
 	temp.resize(temp_last_id + 1);
 
-	std::vector<Point> ans{ basePoint };
-	if (temp.size() <= 1) {
-		for (auto& p : temp)
-			ans.push_back(p);
-		return ans;
-	}
 	ans.push_back(temp[0]);
 	ans.push_back(temp[1]);
 	for (int i = 2; i < temp.size(); i++) {
